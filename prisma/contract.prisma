@@ -8,3 +8,38 @@ model User {
   createdAt TimestamptzString @default(now())
 }
 
+model Movie {
+  id          String      @id @default(autoincrement())
+  title       String
+  overview    String?
+  releaseYear Int
+  genres      String[] @default([])
+  runtime     Int?
+  posterUrl    String?
+  createdBy    String
+  createdAt   TimestamptzString @default(now())
+}
+
+model WatchlistItem {
+  id        String      @id @default(autoincrement())
+  userId    String
+  movieId   String
+  status    WatchlistStatus @default(PLANNED)
+  rating   Int?
+  notes   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  user      User      @relation(fields: [userId], references: [id])
+  movie     Movie     @relation(fields: [movieId], references: [id])
+
+  @@unique([userId, movieId])
+}
+
+enum WatchlistStatus {
+  PLANNED
+  WATCHING
+  COMPLETED
+  DROPPED
+}
+
